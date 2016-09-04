@@ -1,11 +1,15 @@
 require 'spec_helper'
 
 describe SeleniumSpider do
-  it 'has a version number' do
-    expect(SeleniumSpider::VERSION).not_to be nil
+  before :all do
+    @pid = Process.spawn('bundle e ruby spec/fixtures/app.rb')
   end
 
-  it 'does something useful' do
-    expect(true).to eq(true)
+  after :all do
+    Process.kill 9, @pid
+  end
+
+  it '' do
+    expect(true).to be true
   end
 end
