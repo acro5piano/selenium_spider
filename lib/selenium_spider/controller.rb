@@ -15,9 +15,11 @@ module SeleniumSpider
           @pagination.detail_links.each do |detail_link|
             @model = SeleniumSpider.const_get(type).new(detail_link)
             @model.save
+            @model.quit
           end
           @pagination.next
         end
+        @pagination.quit
       end
     end
   end
