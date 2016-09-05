@@ -18,6 +18,7 @@ site_name = ARGV[0]
 class_name = ARGV[0].classify + 'Controller'
 
 group_require 'examples', site_name
+group_require 'app', site_name
 
 Object.const_get(class_name).new.run
 
