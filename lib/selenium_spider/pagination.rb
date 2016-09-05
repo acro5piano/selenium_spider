@@ -7,14 +7,27 @@ module SeleniumSpider
       @@next_link_find_by = find_by
     end
 
-    def self.detail_links(selector)
-      @@detail_links = selector
+    def self.no_next_link
+      @@next_link = nil
     end
 
-    def initialize(start_url)
-      super(headless: true)
+    def self.detail_links(selector)
+      @@detail_links_selector = selector
+    end
+
+    def self.no_detail_link
+      @@detail_links_selector = nil
+    end
+
+    def initialize(start_url, times: 0)
+      super()
       visit start_url
+      before_crawl times
       @uri = URI.parse(start_url)
+    end
+
+    # You can define something to do before crawling
+    def before_crawl(times)
     end
 
     def next
@@ -22,7 +35,8 @@ module SeleniumSpider
     end
 
     def detail_links
-      search(@@detail_links).map(&->(x){x.attribute('href').value}).map(&->(x){full_url(x)})
+      return [@driver.current_url] if !@@detail_links_selector
+      search(@@detail_links_selector).map(&->(x) { full_url(x.attribute('href').value) } )
     end
 
     def full_url(path)
@@ -31,11 +45,8 @@ module SeleniumSpider
     end
 
     def continue?
-      if has_element? @@next_link, find_by: @@next_link_find_by
-        true
-      else
-        false
-      end
+      return false if !@@next_link
+      has_element?(@@next_link, find_by: @@next_link_find_by)
     end
   end
 end

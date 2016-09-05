@@ -6,7 +6,7 @@ module SeleniumSpider
     @@attributes = {}
 
     def initialize(detail_link)
-      super(headless: true)
+      super()
       visit detail_link
     end
 
@@ -18,7 +18,10 @@ module SeleniumSpider
     def extract(attr_name_sym)
       attr = @@attributes[attr_name_sym]
       element_str = search(attr.css).inner_text
-      element_str = element_str.match(/#{attr.match}/)[0] if attr.match
+      if attr.match
+        match = element_str.match(/#{attr.match}/)
+        element_str = (match)? match[0] : element_str
+      end
       element_str
     end
 

@@ -5,20 +5,60 @@ $:.unshift(File.dirname(File.expand_path(__FILE__)) + '../')
 require 'selenium_spider'
 require 'active_support'
 require 'active_support/core_ext'
+require 'optparse'
 
-def group_require(group_name, site_name)
-  if File.exist? group_name
-    require "./#{group_name}/models/#{site_name}"
-    require "./#{group_name}/paginations/#{site_name}_pagination"
-    require "./#{group_name}/controllers/#{site_name}_controller"
+def group_require(site_name)
+  %w(examples app).each do |group_name|
+    if File.exist? "./#{group_name}/models/#{site_name}.rb"
+      require "./#{group_name}/models/#{site_name}"
+      require "./#{group_name}/paginations/#{site_name}_pagination"
+      require "./#{group_name}/controllers/#{site_name}_controller"
+    end
   end
 end
 
-site_name = ARGV[0]
-class_name = ARGV[0].classify + 'Controller'
+commands = ['run']
+options = {}
 
-group_require 'examples', site_name
-group_require 'app', site_name
+option_parser = OptionParser.new do |parser|
+  parser.banner = "SeleniumSpider #{SeleniumSpider::VERSION}\n\n"
+  parser.separator "Usage: selenium-spider command [option]\n"
 
-Object.const_get(class_name).new.run
+  parser.separator "Commands:"
+  commands.each do |cmd|
+    parser.separator "    " + cmd
+  end
+
+  parser.separator "Options for command 'run':"
+  parser.on('-m site', '--site=site', "メディア名") { |v| options[:site] = v }
+  parser.on('--headless', 'GUI無しで動作(xvfbが必要)') { |v| options[:headless] = v }
+
+  parser.separator "Other options"
+  parser.on('-h', '--help', "Show this message")
+
+  parser.parse!(ARGV)
+end
+
+cmd = ARGV[0]
+
+if options[:headless]
+  headless = Headless.new(reuse: false, destroy_at_exit: true)
+  headless.start
+end
+
+if cmd == 'run'
+  group_require options[:site]
+
+  # Generate SeleniumSpider::[site_name] by String options[:site]
+  class_name = options[:site].classify + 'Controller'
+  Object.const_get(class_name).new.run
+else
+  puts option_parser
+  exit 1
+end
+
+if options[:headless]
+  headless.destroy
+end
+
 
