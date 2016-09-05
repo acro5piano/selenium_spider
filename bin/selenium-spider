@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File.dirname(File.expand_path(__FILE__)) + '../')
+
+require 'selenium_spider'
+
+require './examples/models/yahoo'
+require './examples/paginations/yahoo_pagination'
+require './examples/controllers/yahoo_controllers'
+
+
+YahooController.new.run

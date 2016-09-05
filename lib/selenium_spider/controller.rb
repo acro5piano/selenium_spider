@@ -9,14 +9,14 @@ module SeleniumSpider
     def run
       @@urls.each do |url|
         type = self.class.to_s.sub('Controller', '')
-        class_name = type + 'Pagination'
-        @pagination = SeleniumSpider.const_get(class_name).new(url)
-        @pagination.next
-        @pagination.detail_links.each do |detail_link|
-          @model = SeleniumSpider.const_get(type).new(detail_link)
-          @model.extract(:AAA)
-          @model.extract_all
-          @model.save
+        pagenation_class = type + 'Pagination'
+        @pagination = SeleniumSpider.const_get(pagenation_class).new(url)
+        while @pagination.continue?
+          @pagination.detail_links.each do |detail_link|
+            @model = SeleniumSpider.const_get(type).new(detail_link)
+            @model.save
+          end
+          @pagination.next
         end
       end
     end

@@ -30,10 +30,10 @@ module SeleniumSpider
       extracted
     end
 
-    # TODO: データベースに保存するようにする
+    # TODO: save to database(sqlite)
     def save
       @@attributes.each do |key, value|
-        puts extract(key)
+        puts key.to_s + ' => ' + extract(key)
       end
     end
   end

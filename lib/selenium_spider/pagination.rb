@@ -2,8 +2,9 @@ require "selenium_standalone_dsl"
 
 module SeleniumSpider
   class Pagination < SeleniumStandaloneDSL::Base
-    def self.next_link(selector)
+    def self.next_link(selector, find_by: :link_text)
       @@next_link = selector
+      @@next_link_find_by = find_by
     end
 
     def self.detail_links(selector)
@@ -17,7 +18,7 @@ module SeleniumSpider
     end
 
     def next
-      click @@next_link
+      click @@next_link, find_by: @@next_link_find_by
     end
 
     def detail_links
@@ -25,8 +26,16 @@ module SeleniumSpider
     end
 
     def full_url(path)
-      port = (@uri.port == 80) ? '' : @uri.port
-      @uri.scheme + '://' + @uri.host + ':' + port.to_s + path
+      port = (@uri.port == 80) ? '' : ':' + @uri.port.to_s
+      @uri.scheme + '://' + @uri.host + port + path
+    end
+
+    def continue?
+      if has_element? @@next_link, find_by: @@next_link_find_by
+        true
+      else
+        false
+      end
     end
   end
 end
