@@ -2,6 +2,30 @@
 
 Scrape websites using Firefox headlessly handled by Selenium.
 
+This will have these features:
+
+### Full JavaScript support
+
+Based on Selenium Standalone DSL which run Firefox headlessly, it comprehences JavaScript completely.
+
+### PMC architecture
+
+MPC = Model Pagination Controller
+
+Generally, scraping is consist of two parts: Listing page and Detail page.
+
+In MPC architecture, Model is for extracting information from detail page and store data to database.
+
+Page is for listing items and pagenation.
+
+Controller is for handling the above two.
+
+### Web-based task execution
+
+Scraping tasks are often multiply and difficult to arrange.
+
+Imagine Web-based task execution, definition, csv-export and scheduling like Jenkins.
+
 ## Installation
 
 Add this line to your application's Gemfile:
