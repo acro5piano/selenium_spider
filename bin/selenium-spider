@@ -3,10 +3,21 @@
 $:.unshift(File.dirname(File.expand_path(__FILE__)) + '../')
 
 require 'selenium_spider'
+require 'active_support'
+require 'active_support/core_ext'
 
-require './examples/models/yahoo'
-require './examples/paginations/yahoo_pagination'
-require './examples/controllers/yahoo_controllers'
+def group_require(group_name, site_name)
+  if File.exist? group_name
+    require "./#{group_name}/models/#{site_name}"
+    require "./#{group_name}/paginations/#{site_name}_pagination"
+    require "./#{group_name}/controllers/#{site_name}_controller"
+  end
+end
 
+site_name = ARGV[0]
+class_name = ARGV[0].classify + 'Controller'
 
-YahooController.new.run
+group_require 'examples', site_name
+
+Object.const_get(class_name).new.run
+
