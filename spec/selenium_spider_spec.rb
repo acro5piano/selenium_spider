@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SeleniumSpider do
   before :all do
-    @pid = Process.spawn('bundle e ruby spec/fixtures/app.rb')
+    @pid = Process.spawn('bundle exec ruby spec/fixtures/app.rb')
   end
 
   after :all do
