@@ -1,57 +1,35 @@
 #!/usr/bin/env ruby
 
 require 'selenium_spider'
-require 'active_support'
-require 'active_support/core_ext'
 require 'optparse'
 
-$LOAD_PATH.unshift File.expand_path('../../app', __FILE__)
-$LOAD_PATH.unshift File.expand_path('../../examples', __FILE__)
-
-commands = ['run']
 options = {}
+options[:command] = ARGV[0]
 
-option_parser = OptionParser.new do |parser|
+OptionParser.new do |parser|
   parser.banner = "SeleniumSpider #{SeleniumSpider::VERSION}\n\n"
   parser.separator "Usage: selenium-spider command [option]\n"
 
   parser.separator "Commands:"
-  commands.each do |cmd|
+  %w(run generate).each do |cmd|
     parser.separator "    " + cmd
   end
 
   parser.separator "Options for command 'run':"
-  parser.on('-m site', '--site=site', "メディア名") { |v| options[:site] = v }
+  parser.on('-s site', '--site=site', "サイト名") { |v| options[:site] = v }
   parser.on('--headless', 'GUI無しで動作(xvfbが必要)') { |v| options[:headless] = v }
 
+  parser.separator "Options for command 'generate':"
+  parser.on('-s site', '--site=site', "サイト名") { |v| options[:site] = v }
+
   parser.separator "Other options"
-  parser.on('-h', '--help', "Show this message")
+  parser.on('-h', '--help', "Show this message") do
+    puts parser
+    exit 1
+  end
 
-  parser.parse!(ARGV)
+  parser.parse! ARGV
 end
 
-if options[:headless]
-  headless = Headless.new(reuse: false, destroy_at_exit: true)
-  headless.start
-end
-
-cmd = ARGV[0]
-
-if cmd == 'run'
-  site_name = options[:site]
-  require "models/#{site_name}"
-  require "paginations/#{site_name}_pagination"
-  require "controllers/#{site_name}_controller"
-
-  class_name = options[:site].classify + 'Controller'
-  Object.const_get(class_name).new.run
-else
-  puts option_parser
-  exit 1
-end
-
-if options[:headless]
-  headless.destroy
-end
-
+SeleniumSpider::CommandLine.execute options
 
