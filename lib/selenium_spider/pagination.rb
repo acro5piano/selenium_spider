@@ -19,10 +19,9 @@ module SeleniumSpider
       @@detail_links_selector = nil
     end
 
-    def initialize(start_url, times: 0)
+    def initialize(start_url)
       super()
       visit start_url
-      before_crawl times
       @uri = URI.parse(start_url)
     end
 
@@ -35,8 +34,13 @@ module SeleniumSpider
     end
 
     def detail_links
-      return [@driver.current_url] if !@@detail_links_selector
+      return false if !@@detail_links_selector
+      # return [@driver.current_url] if !@@detail_links_selector
       search(@@detail_links_selector).map(&->(x) { full_url(x.attribute('href').value) } )
+    end
+
+    def page_source
+      @driver.page_source
     end
 
     def full_url(path)

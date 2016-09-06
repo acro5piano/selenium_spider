@@ -1,13 +1,14 @@
-require "selenium_standalone_dsl"
+require 'selenium_standalone_dsl'
+require 'json'
 
 module SeleniumSpider
   class Model < SeleniumStandaloneDSL::Base
     attr_accessor :attributes
     @@attributes = {}
 
-    def initialize(detail_link)
+    def initialize(location)
       super()
-      visit detail_link
+      visit location
     end
 
     def self.register(attr_name_sym)
@@ -35,9 +36,10 @@ module SeleniumSpider
 
     # TODO: save to database(sqlite)
     def save
-      @@attributes.each do |key, value|
-        puts key.to_s + ' => ' + extract(key)
-      end
+    end
+
+    def output_as_json
+      JSON.dump extract_all
     end
   end
 
