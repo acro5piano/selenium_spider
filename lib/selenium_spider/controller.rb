@@ -17,13 +17,8 @@ module SeleniumSpider
         @pagination.before_crawl idx
 
         while true
-          if (detail_links = @pagination.detail_links)
-            detail_links.each do |detail_link|
-              extract_info detail_link
-            end
-          else
-            save_pagination_cache '/tmp/selenium_spider_cache.html'
-            extract_info 'file:///tmp/selenium_spider_cache.html'
+          @pagination.detail_links.each do |detail_link|
+            extract_info detail_link
           end
 
           break if !@pagination.continue?
@@ -31,12 +26,6 @@ module SeleniumSpider
         end
 
         @pagination.quit
-      end
-    end
-
-    def save_pagination_cache(file_path)
-      File.open(file_path, 'w') do |f|
-        f.puts @pagination.page_source
       end
     end
 
