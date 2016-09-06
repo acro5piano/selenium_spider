@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/acro5piano/selenium_spider.svg?branch=master)](https://travis-ci.org/acro5piano/selenium_spider)
+
 # Selenium Spider
 
 Scrape websites using Firefox headlessly handled by Selenium.
