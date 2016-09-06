@@ -2,6 +2,7 @@
 
 require 'active_support'
 require 'active_support/core_ext'
+require 'tilt'
 
 $LOAD_PATH.unshift File.expand_path('../../../app', __FILE__)
 $LOAD_PATH.unshift File.expand_path('../../../examples', __FILE__)
@@ -47,27 +48,34 @@ module SeleniumSpider
 
       gem_root = File.expand_path('../lib', ENV['BUNDLE_GEMFILE'])
       generation_path = "#{gem_root}/selenium_spider/generations"
-      cp_if_not_exist "#{generation_path}/model.rb", "./app/models/#{@options[:site]}.rb"
-      cp_if_not_exist "#{generation_path}/pagination.rb", "./app/paginations/#{@options[:site]}_pagination.rb"
-      cp_if_not_exist "#{generation_path}/controller.rb", "./app/controllers/#{@options[:site]}_controller.rb"
+
+      generate_class "#{generation_path}/model.rb.erb",
+                     "./app/models/#{@options[:site]}.rb"
+      generate_class "#{generation_path}/pagination.rb.erb",
+                     "./app/paginations/#{@options[:site]}_pagination.rb"
+      generate_class "#{generation_path}/controller.rb.erb",
+                     "./app/controllers/#{@options[:site]}_controller.rb"
     end
 
     private
+
+      def generate_class(from, to)
+        if File.exist? to
+          puts 'Skip: ' + to
+          return
+        end
+
+        open(to, 'w') do |f|
+          template = Tilt.new(from)
+          f.puts template.render(self, site_class: @options[:site].classify)
+        end
+      end
 
       def mkdir_if_not_exist(path)
         return if File.exist? path
 
         require 'fileutils'
         FileUtils.mkdir_p './app/models/'
-      end
-
-      def cp_if_not_exist(from, to)
-        if File.exist? to
-          puts 'Skip: ' + to
-          return
-        end
-
-        FileUtils.cp from, to
       end
   end
 end
