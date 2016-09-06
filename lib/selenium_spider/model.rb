@@ -19,9 +19,14 @@ module SeleniumSpider
     def extract(attr_name_sym)
       attr = @@attributes[attr_name_sym]
       element_str = search(attr.css).inner_text
-      if attr.match
-        match = element_str.match(/#{attr.match}/)
-        element_str = (match)? match[0] : element_str
+      if attr.match &&(match = element_str.match(/#{attr.match}/))
+        element_str = match[match.length - 1]
+      end
+      if attr.sub
+        element_str = element_str.sub(/#{attr.sub[:match]}/, attr.sub[:replace])
+      end
+      if attr.lambda
+        element_str = attr.lambda.call(element_str)
       end
       element_str
     end
@@ -44,7 +49,7 @@ module SeleniumSpider
   end
 
   class Attribute
-    attr_accessor :css, :match
+    attr_accessor :css, :match, :lambda, :sub
   end
 end
 
