@@ -17,8 +17,12 @@ module SeleniumSpider
         @pagination.before_crawl idx
 
         while true
-          @pagination.detail_links.each do |detail_link|
-            extract_info detail_link
+          if (detail_links = @pagination.detail_links)
+            detail_links.each do |detail_link|
+              extract_info location: detail_link
+            end
+          else
+              extract_info driver: @pagination.driver
           end
 
           break if !@pagination.continue?
@@ -29,10 +33,13 @@ module SeleniumSpider
       end
     end
 
-    def extract_info(detail_link)
-      model = SeleniumSpider.const_get(@type).new(detail_link)
+    def extract_info(location: nil, driver: nil)
+      model = SeleniumSpider.const_get(@type).new(location: location, driver: driver)
+      @pagination.attributes.each do |key, value|
+        model.set_attributes_value(key, value.value)
+      end
       puts model.output_as_json
-      model.quit
+      model.quit if location
     end
   end
 end

@@ -2,6 +2,12 @@ require "selenium_standalone_dsl"
 
 module SeleniumSpider
   class Pagination < SeleniumStandaloneDSL::Base
+    @@attributes = {}
+
+    def attributes
+      @@attributes
+    end
+
     def self.next_link(selector, find_by: :link_text)
       @@next_link = selector
       @@next_link_find_by = find_by
@@ -34,7 +40,7 @@ module SeleniumSpider
     end
 
     def detail_links
-      return [@driver.current_url] if !@@detail_links_selector
+      return false if !@@detail_links_selector
       search(@@detail_links_selector).map(&->(x) { full_url(x.attribute('href').value) } )
     end
 
@@ -46,6 +52,11 @@ module SeleniumSpider
     def continue?
       return false if !@@next_link
       has_element?(@@next_link, find_by: @@next_link_find_by)
+    end
+
+    def register(attr_name_sym)
+      @@attributes[attr_name_sym] = SeleniumSpider::Attribute.new
+      yield @@attributes[attr_name_sym] if block_given?
     end
   end
 end
