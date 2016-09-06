@@ -16,7 +16,8 @@
 /public/system
 /spec/reports/
 /spec/tmp
-/tmp
+/tmp/*
+!/tmp/.gitkeep
 /vendor/bundle
 capybara-*.html
 config/initializers/secret_token.rb
