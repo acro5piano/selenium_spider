@@ -30,12 +30,12 @@ option_parser = OptionParser.new do |parser|
   parser.parse!(ARGV)
 end
 
-cmd = ARGV[0]
-
 if options[:headless]
   headless = Headless.new(reuse: false, destroy_at_exit: true)
   headless.start
 end
+
+cmd = ARGV[0]
 
 if cmd == 'run'
   site_name = options[:site]
