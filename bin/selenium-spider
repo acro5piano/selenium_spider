@@ -8,12 +8,6 @@ require 'optparse'
 $LOAD_PATH.unshift File.expand_path('../../app', __FILE__)
 $LOAD_PATH.unshift File.expand_path('../../examples', __FILE__)
 
-def group_require(site_name)
-  require "models/#{site_name}"
-  require "paginations/#{site_name}_pagination"
-  require "controllers/#{site_name}_controller"
-end
-
 commands = ['run']
 options = {}
 
@@ -44,9 +38,11 @@ if options[:headless]
 end
 
 if cmd == 'run'
-  group_require options[:site]
+  site_name = options[:site]
+  require "models/#{site_name}"
+  require "paginations/#{site_name}_pagination"
+  require "controllers/#{site_name}_controller"
 
-  # Generate SeleniumSpider::[site_name] by String options[:site]
   class_name = options[:site].classify + 'Controller'
   Object.const_get(class_name).new.run
 else
