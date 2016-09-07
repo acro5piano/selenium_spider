@@ -1,3 +1,4 @@
+[![Gem Version](https://badge.fury.io/rb/selenium_spider.svg)](https://badge.fury.io/rb/selenium_spider)
 [![Build Status](https://travis-ci.org/acro5piano/selenium_spider.svg?branch=master)](https://travis-ci.org/acro5piano/selenium_spider)
 
 # Selenium Spider
