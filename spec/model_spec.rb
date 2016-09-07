@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SeleniumSpider::Model do
   before :all do
-    @model = Spec.new('http://localhost:4567/detail/1')
+    @model = Spec.new(location: 'http://localhost:4567/detail/1')
   end
 
   after :all do
