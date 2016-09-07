@@ -15,7 +15,8 @@
 /pkg/
 /public/system
 /spec/reports/
-/spec/tmp
+/spec/tmp/*
+!/spec/tmp/.gitkeep
 /tmp/*
 !/tmp/.gitkeep
 /vendor/bundle
