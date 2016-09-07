@@ -11,6 +11,7 @@ describe SeleniumSpider::CommandLine do
 
   after do
     FileUtils.rm_r 'app' if Dir.exist?('app')
+    FileUtils.cd '../..'
   end
 
   describe '#generate' do
