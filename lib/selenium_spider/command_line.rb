@@ -46,8 +46,8 @@ module SeleniumSpider
       mkdir_if_not_exist './app/paginations/'
       mkdir_if_not_exist './app/controllers/'
 
-      gem_root = File.expand_path('../lib', ENV['BUNDLE_GEMFILE'])
-      generation_path = "#{gem_root}/selenium_spider/generations"
+      gem_root = File.expand_path('../', __FILE__)
+      generation_path = "#{gem_root}/generations"
 
       generate_class "#{generation_path}/model.rb.erb",
                      "./app/models/#{@options[:site]}.rb"
@@ -75,7 +75,7 @@ module SeleniumSpider
         return if File.exist? path
 
         require 'fileutils'
-        FileUtils.mkdir_p './app/models/'
+        FileUtils.mkdir_p path
       end
   end
 end
