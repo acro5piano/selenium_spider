@@ -11,7 +11,7 @@ This will have these features:
 
 Based on Selenium Standalone DSL which run Firefox headlessly, it comprehences JavaScript completely.
 
-### PMC architecture
+### MPC architecture
 
 MPC = Model Pagination Controller
 
@@ -19,11 +19,20 @@ Generally, scraping is consist of two parts: Listing page and Detail page.
 
 In MPC architecture, Model is for extracting information from detail page and store data to database.
 
-Page is for listing items and pagenation.
+Pagination is for listing items and pagenation.
 
 Controller is for handling the above two.
 
-### Web-based task execution
+### Code generator
+
+```sh
+selenium-spider generate --site yahoo
+#=> create app/models/yahoo.rb
+#=> create app/paginations/yahoo_pagination.rb
+#=> create app/controllers/yahoo_controller.rb
+```
+
+### Web-based task execution(Comming)
 
 Scraping tasks are often multiply and difficult to arrange.
 
