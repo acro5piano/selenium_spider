@@ -7,6 +7,8 @@ require 'tilt'
 $LOAD_PATH.unshift File.expand_path('../../../app', __FILE__)
 $LOAD_PATH.unshift File.expand_path('../../../examples', __FILE__)
 
+$LOAD_PATH.unshift File.expand_path('../app', ENV['BUNDLE_GEMFILE'])
+
 module SeleniumSpider
   class CommandLine
     def self.execute(options)
